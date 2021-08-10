@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "~components/*": [
+        "components/*"
+      ],
+      "~config/*": [
+        "config/*"
+      ],
+      "~deskStructure/*": [
+        "deskStructure/*"
+      ],
+      "~parts/*": [
+        "parts/*"
+      ],
+      "~schemas/*": [
+        "schemas/*"
+      ],
+      "~modules/*": [
+        "modules/*"
+      ],
+      "~scripts/*": [
+        "scripts/*"
+      ],
+      "~types/*": [
+        "types/*"
+      ],
+      "~utils/*": [
+        "utils/*"
+      ]
+    }
+  },
+  "files": [
+    "twin.d.ts"
+  ],
+  "include": [
+    "./node_modules/@sanity/base/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+}
