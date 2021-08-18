@@ -5,7 +5,11 @@ import { MdEvent } from 'react-icons/md';
 
 import ExportPDFButton from '../../components/ExportPDFButton';
 
-import { checkGenderBasedValid, checkMixedValid } from '../../utils/lineup';
+import {
+  checkGenderBasedValid,
+  checkMixedValid,
+  getPlayerInfos,
+} from '../../utils/lineup';
 
 import { Document } from '~types/schemaTypes';
 
@@ -66,12 +70,14 @@ const events: Document = {
             id: team._ref,
           });
 
+          const players = await getPlayerInfos(matches);
+
           if (type === 'gemengd') {
-            return checkMixedValid(matches);
+            return checkMixedValid(matches, players);
           }
 
           if (type === 'heren' || type === 'dames') {
-            return checkGenderBasedValid(matches);
+            return checkGenderBasedValid(matches, players);
           }
 
           return true;

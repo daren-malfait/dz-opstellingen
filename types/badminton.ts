@@ -1,4 +1,6 @@
 export interface Player {
+  _ref?: string;
+  _id?: string;
   firstName: string;
   lastName: string;
   memberNumber?: string;
@@ -8,6 +10,11 @@ export interface Player {
   indexGender?: number;
   indexMix?: number;
 }
+
+export interface Reference {
+  _ref?: string;
+}
+
 export interface Match {
   discipline?: Discipline;
   player1: {
