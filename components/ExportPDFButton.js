@@ -57,6 +57,47 @@ function ExportPDFButton({ document, getValuePath }) {
     [document, getValuePath],
   );
 
+  async function getForm() {
+    const result = await fetch('/static/blanco-ploegopstellingsformulier.pdf');
+    const form = await result.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(form);
+    const pages = pdfDoc.getPages();
+    const pdf = pages[0];
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    return { pdf, font, pdfDoc };
+  }
+
+  function getUniquePlayers(matches) {
+    let uniquePlayers = [];
+
+    matches.forEach(({ player1, player2 }) => {
+      let player = player1.player;
+
+      if (
+        !uniquePlayers
+          .map(({ memberNumber }) => memberNumber)
+          .includes(player.memberNumber)
+      ) {
+        uniquePlayers = [...uniquePlayers, player];
+      }
+
+      if (player2 && player2.player) {
+        player = player2.player;
+
+        if (
+          !uniquePlayers
+            .map(({ memberNumber }) => memberNumber)
+            .includes(player.memberNumber)
+        ) {
+          uniquePlayers = [...uniquePlayers, player];
+        }
+      }
+    });
+
+    return uniquePlayers;
+  }
+
   const onClick = React.useCallback(async () => {
     const { _id: id } = getContext();
 
@@ -64,23 +105,40 @@ function ExportPDFButton({ document, getValuePath }) {
       id,
     });
 
-    const result = await fetch('/static/blanco-ploegopstellingsformulier.pdf');
-    const form = await result.arrayBuffer();
-
-    const pdfDoc = await PDFDocument.load(form);
-
-    const pages = pdfDoc.getPages();
-    const pdf = pages[0];
-
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const { pdf, font, pdfDoc } = await getForm();
 
     const { matches, team, away, opponent, date } = event;
+
+    let index = 'indexGender';
+    let highestIndex = 'highestIndexGender';
+
+    if (team.type === 'gemengd') {
+      index = 'indexMix';
+      highestIndex = 'highestIndexMix';
+    }
+
+    let uniquePlayers = getUniquePlayers(matches);
+
+    const titularis = [...uniquePlayers]
+      .sort((a, b) => {
+        return a[index] > b[index] ? 1 : -1;
+      })
+      .slice(0, 4);
+
+    const titularisIndex = titularis.reduce((a, b) => a + (b[index] || 0), 0);
 
     const Datum = format(new Date(parseISO(date)), 'dd-MM-yyyy');
     const Time = format(new Date(parseISO(date)), 'HH:mm');
 
     pdf.drawText(Datum, {
       x: 550,
+      y: 460,
+      size: 12,
+      font,
+    });
+
+    pdf.drawText(titularisIndex.toString(), {
+      x: 755,
       y: 460,
       size: 12,
       font,
@@ -118,8 +176,6 @@ function ExportPDFButton({ document, getValuePath }) {
       font,
     });
 
-    let players = [];
-
     function createLine(player, x, y, klas, sumIndex, highestIndex) {
       pdf.drawText(player.lastName, {
         x,
@@ -142,7 +198,11 @@ function ExportPDFButton({ document, getValuePath }) {
         font,
       });
 
-      if (!players.includes(player._id)) {
+      if (
+        uniquePlayers
+          .map(({ memberNumber }) => memberNumber)
+          .includes(player.memberNumber)
+      ) {
         pdf.drawText(player.memberNumber, {
           x: x + 315,
           y,
@@ -164,7 +224,22 @@ function ExportPDFButton({ document, getValuePath }) {
           font,
         });
 
-        players = [...players, player._id];
+        if (
+          titularis
+            .map(({ memberNumber }) => memberNumber)
+            .includes(player.memberNumber)
+        ) {
+          pdf.drawText('x', {
+            x: x + 500,
+            y,
+            size: 12,
+            font,
+          });
+        }
+
+        uniquePlayers = uniquePlayers.filter(
+          ({ memberNumber }) => memberNumber !== player.memberNumber,
+        );
       }
     }
 
@@ -194,13 +269,8 @@ function ExportPDFButton({ document, getValuePath }) {
       let startYPos = 339;
       let rowHeight = 14;
       let klassement = 'rankingDoubles';
-      let index = 'indexGender';
-      let highestIndex = 'highestIndexGender';
 
       if (team.type === 'gemengd') {
-        index = 'indexMix';
-        highestIndex = 'highestIndexMix';
-
         if (i >= 2) {
           klassement = 'rankingMix';
         }
