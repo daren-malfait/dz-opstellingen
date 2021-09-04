@@ -17,6 +17,7 @@ const query = `
     team {
       ...@->
     },
+    captain->,
     matches[] {
       discipline,
       player1 {
@@ -107,7 +108,7 @@ function ExportPDFButton({ document, getValuePath }) {
 
     const { pdf, font, pdfDoc } = await getForm();
 
-    const { matches, team, away, opponent, date } = event;
+    const { matches, team, away, opponent, date, captain } = event;
 
     let index = 'indexGender';
     let highestIndex = 'highestIndexGender';
@@ -129,6 +130,22 @@ function ExportPDFButton({ document, getValuePath }) {
 
     const Datum = format(new Date(parseISO(date)), 'dd-MM-yyyy');
     const Time = format(new Date(parseISO(date)), 'HH:mm');
+
+    if (captain) {
+      pdf.drawText(captain.firstName, {
+        x: 215,
+        y: 357,
+        size: 12,
+        font,
+      });
+
+      pdf.drawText(captain.lastName, {
+        x: 215 + 130,
+        y: 357,
+        size: 12,
+        font,
+      });
+    }
 
     pdf.drawText(Datum, {
       x: 550,

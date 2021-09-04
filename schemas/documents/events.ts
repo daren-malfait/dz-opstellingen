@@ -50,6 +50,12 @@ const events: Document = {
       },
     },
     {
+      title: 'Kapitein',
+      name: 'captain',
+      type: 'reference',
+      to: [{ type: 'players' }],
+    },
+    {
       name: 'matches',
       title: 'Matches',
       type: 'array',
