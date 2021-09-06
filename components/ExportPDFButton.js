@@ -119,12 +119,30 @@ function ExportPDFButton({ document, getValuePath }) {
     }
 
     let uniquePlayers = getUniquePlayers(matches);
+    let titularis = [];
 
-    const titularis = [...uniquePlayers]
-      .sort((a, b) => {
-        return a[index] > b[index] ? 1 : -1;
-      })
-      .slice(0, 4);
+    function getHighest(people = [], count = 4) {
+      return [...people]
+        .sort((a, b) => {
+          return a[index] > b[index] ? 1 : -1;
+        })
+        .slice(0, count);
+    }
+
+    if (team.type === 'gemengd') {
+      const uniqueMen = [
+        ...uniquePlayers.filter(({ gender }) => gender === 'M'),
+      ];
+      const uniqueWomen = [
+        ...uniquePlayers.filter(({ gender }) => gender === 'V'),
+      ];
+
+      titularis = [
+        ...[...getHighest(uniqueMen, 2), ...getHighest(uniqueWomen, 2)],
+      ];
+    } else {
+      titularis = [...getHighest, uniquePlayers(uniquePlayers)];
+    }
 
     const titularisIndex = titularis.reduce((a, b) => a + (b[index] || 0), 0);
 
