@@ -1,35 +1,19 @@
 import { format } from 'date-fns';
-import client from 'part:@sanity/base/client';
 import React from 'react';
 
 import config from './config';
 import styles from './Event.css';
 
 const Event = ({ event }) => {
-  const [teamName, setTeamName] = React.useState('');
-
-  React.useEffect(() => {
-    async function getTeam() {
-      const { team } = event;
-      const result = await client.fetch(`*[_id == $id][0]`, {
-        id: team._ref,
-      });
-
-      setTeamName(`DZ99 ${result.name}`);
-    }
-
-    getTeam();
-  }, [event]);
-
   const title = React.useMemo(() => {
-    const { away, opponent } = event;
+    const { away, opponent, team } = event;
 
     if (away) {
-      return `${opponent} - ${teamName}`;
+      return `${opponent} - DZ99 ${team.name}`;
     }
 
-    return `${teamName} - ${opponent}`;
-  }, [event, teamName]);
+    return `DZ99 ${team.name} - ${opponent}`;
+  }, [event]);
 
   return (
     <div className={styles.root} title={title}>

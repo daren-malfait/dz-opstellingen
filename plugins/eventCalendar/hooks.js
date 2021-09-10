@@ -8,8 +8,9 @@ const types = ['events'];
 
 export const useEvents = () => {
   const [events, setEvents] = useState([]);
-  const query = `*[_type == "events" && !(_id in path('drafts.**'))]`;
-  const listenQuery = '*[_type == "events" && !(_id in path(\'drafts.**\'))]';
+  const query = `*[_type == "events" && !(_id in path('drafts.**'))]{..., team->}`;
+  const listenQuery =
+    '*[_type == "events" && !(_id in path(\'drafts.**\'))]{..., team->}';
 
   const fetchWorkflowDocuments = React.useCallback(() => {
     client.fetch(query, { types: ['events'] }).then(handleReceiveEvents);
