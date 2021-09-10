@@ -141,7 +141,7 @@ function ExportPDFButton({ document, getValuePath }) {
         ...[...getHighest(uniqueMen, 2), ...getHighest(uniqueWomen, 2)],
       ];
     } else {
-      titularis = [...getHighest, uniquePlayers(uniquePlayers)];
+      titularis = [...getHighest(uniquePlayers)];
     }
 
     const titularisIndex = titularis.reduce((a, b) => a + (b[index] || 0), 0);
