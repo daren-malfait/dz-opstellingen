@@ -2,6 +2,7 @@ import { parseISO, format } from 'date-fns';
 import client from 'part:@sanity/base/client';
 import { BiListCheck, BiListUl, BiListPlus } from 'react-icons/bi';
 import { MdEvent } from 'react-icons/md';
+import Tabs from 'sanity-plugin-tabs';
 
 import ExportPDFButton from '../../components/ExportPDFButton';
 
@@ -18,26 +19,34 @@ const events: Document = {
   title: 'Events',
   icon: MdEvent,
   type: 'document',
+  inputComponent: Tabs,
   initialValue: {
     away: false,
   },
+  fieldsets: [
+    { name: 'main', title: 'Main' },
+    { name: 'other', title: 'Other' },
+  ],
   fields: [
     {
       title: 'Team',
       name: 'team',
       type: 'reference',
       to: [{ type: 'teams' }],
+      fieldset: 'main',
       validation: Rule => Rule.required(),
     },
     {
       name: 'opponent',
       title: 'Opponent',
       type: 'string',
+      fieldset: 'main',
       validation: Rule => Rule.required(),
     },
     {
       name: 'away',
       title: 'Away match',
+      fieldset: 'main',
       type: 'boolean',
     },
     {
@@ -45,6 +54,7 @@ const events: Document = {
       title: 'Date',
       type: 'datetime',
       validation: Rule => Rule.required(),
+      fieldset: 'main',
       options: {
         dateFormat: 'DD-MM-YYYY',
       },
@@ -53,6 +63,7 @@ const events: Document = {
       title: 'Kapitein',
       name: 'captain',
       type: 'reference',
+      fieldset: 'main',
       to: [{ type: 'players' }],
     },
     {
@@ -60,6 +71,7 @@ const events: Document = {
       title: 'Matches',
       type: 'array',
       of: [{ type: 'match' }],
+      fieldset: 'main',
       validation: Rule =>
         Rule.custom(async (matches, { parent }) => {
           if (!matches || matches.length < 8) {
@@ -93,7 +105,14 @@ const events: Document = {
       name: 'export',
       title: 'Export',
       type: 'boolean',
+      fieldset: 'main',
       inputComponent: ExportPDFButton,
+    },
+    {
+      name: 'notes',
+      title: 'Notes',
+      type: 'portableText',
+      fieldset: 'other',
     },
   ],
   preview: {
