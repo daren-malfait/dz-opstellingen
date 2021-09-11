@@ -4,6 +4,11 @@
   --border-style: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.filter {
+  margin-bottom: 18px;
+  z-index: 40;
+}
+
 .container {
   display: flex;
   height: 100%;

@@ -1,6 +1,7 @@
 import { format, parse, startOfWeek, getDay, isPast } from 'date-fns';
 import React, { useState } from 'react';
 import { Calendar as CalendarUI, dateFnsLocalizer } from 'react-big-calendar';
+import Select from 'react-select';
 
 import AgendaEvent from './AgendaEvent';
 import styles from './Calendar.css';
@@ -33,9 +34,26 @@ const components = {
 };
 
 const Calendar = () => {
+  const [filter, setFilter] = React.useState(null);
   const events = useEvents();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const filteredEvents = React.useMemo(() => {
+    if (filter && filter.length > 0) {
+      return events.filter(event =>
+        filter.map(({ value }) => value).includes(event.team.name),
+      );
+    }
+
+    return events;
+  }, [filter, events]);
+
+  const options = React.useMemo(() => {
+    const unique = [...new Set(events.map(item => item.team.name))];
+
+    return unique.map(team => ({ label: `DZ99 ${team}`, value: team }));
+  }, [events]);
 
   const handleOpenDialog = event => {
     setIsOpen(true);
@@ -47,13 +65,25 @@ const Calendar = () => {
     setSelectedEvent(null);
   };
 
+  function handleFilterChange(option) {
+    setFilter(option);
+  }
+
   return (
     <div className={styles.container}>
+      <div className={styles.filter}>
+        <Select
+          isMulti
+          options={options}
+          placeholder="Filter teams..."
+          onChange={handleFilterChange}
+        />
+      </div>
       <CalendarUI
         components={components}
         className={styles.calendar}
         localizer={localizer}
-        events={events}
+        events={filteredEvents}
         startAccessor="start"
         endAccessor="end"
         onSelectEvent={handleOpenDialog}
