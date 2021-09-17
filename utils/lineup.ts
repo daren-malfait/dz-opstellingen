@@ -73,6 +73,10 @@ export function checkMixedValid(
     }
   });
 
+  if (!isSorted(indexesMensSingles)) {
+    return 'Controleer de volgorde van de heren enkels.';
+  }
+
   const womensSinglesLineup = matches.filter(
     ({ discipline }: any) => discipline === Discipline.WomensSingles,
   );
@@ -85,6 +89,10 @@ export function checkMixedValid(
       indexesWomensSingles = [...indexesWomensSingles, p1.rankingSingles];
     }
   });
+
+  if (!isSorted(indexesWomensSingles)) {
+    return 'Controleer de volgorde van de vrouwen enkels.';
+  }
 
   if (mixedLineup.length !== 2) {
     return 'Een gemengde onmoeting moet 2 mixed doubles bevatten';
