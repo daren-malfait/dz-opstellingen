@@ -43,7 +43,6 @@ yarn-error.log
 .yarn-integrity
 
 # Lock files
-yarn.lock
 package.lock
 
 # Local vercel/netlify folders

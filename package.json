@@ -1,20 +1,19 @@
 {
-  "private": true,
   "name": "studio",
-  "author": "Daren Malfait <me@daren.be> (https://daren.be)",
   "version": "0.0.0-semantically-released",
+  "private": true,
+  "author": "Daren Malfait <me@daren.be> (https://daren.be)",
   "scripts": {
     "build": "cross-env SANITY_ACTIVE_ENV=production sanity build",
-    "dev": "cross-env SANITY_ACTIVE_ENV=development sanity start",
     "deploy": "cross-env SANITY_ACTIVE_ENV=production sanity deploy",
+    "dev": "cross-env SANITY_ACTIVE_ENV=development sanity start",
     "export": "npx sanity dataset export production --no-drafts ./data/production.tar.gz",
     "import": "npx sanity dataset import ./data/production.tar.gz",
-    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:src": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:types": "tsc --noEmit",
     "prepare": "husky install",
     "test": "sanity check",
-    "typecheck": "tsc --noEmit",
-    "validate": "npm run lint --silent && npm run typecheck --silent"
+    "validate": "concurrently yarn:lint:*"
   },
   "dependencies": {
     "@emotion/babel-plugin-jsx-pragmatic": "^0.1.5",
@@ -36,6 +35,7 @@
     "@sanity/vision": "2.13.2-conditional-fields.29",
     "autoprefixer": "^10.3.1",
     "babel-plugin-macros": "^3.1.0",
+    "concurrently": "^6.4.0",
     "date-fns": "^2.23.0",
     "file-saver": "^2.0.5",
     "pdf-lib": "^1.16.0",
