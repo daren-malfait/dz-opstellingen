@@ -114,6 +114,34 @@ const events: Document = {
       type: 'portableText',
       fieldset: 'other',
     },
+    {
+      name: 'tasks',
+      title: 'Tasks',
+      type: 'object',
+      fieldset: 'other',
+      fields: [
+        {
+          name: 'share',
+          title: 'Opstelling delen team',
+          type: 'boolean',
+        },
+        {
+          name: 'food',
+          title: 'Eten regelen',
+          type: 'boolean',
+        },
+        {
+          name: 'check',
+          title: 'Opstelling ingeven/controleren badmintonvlaanderen',
+          type: 'boolean',
+        },
+        {
+          name: 'costs',
+          title: 'Onkosten indienen',
+          type: 'boolean',
+        },
+      ],
+    },
   ],
   preview: {
     select: {
