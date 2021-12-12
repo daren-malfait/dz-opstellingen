@@ -150,14 +150,14 @@ function ExportPDFButton({ document, getValuePath }) {
     const Time = format(new Date(parseISO(date)), 'HH:mm');
 
     if (captain) {
-      pdf.drawText(captain.firstName, {
+      pdf.drawText(captain.lastName, {
         x: 215,
         y: 357,
         size: 12,
         font,
       });
 
-      pdf.drawText(captain.lastName, {
+      pdf.drawText(captain.firstName, {
         x: 215 + 130,
         y: 357,
         size: 12,
