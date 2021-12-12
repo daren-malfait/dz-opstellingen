@@ -14,6 +14,6 @@ export default S.listItem()
         yesterday: add(new Date(), { days: -1 }),
       })
       .menuItems([...S.documentTypeList('events').getMenuItems()])
-      .defaultOrdering([{ field: 'date', direction: 'asc' }]),
+      .defaultOrdering([{ field: 'date', direction: 'desc' }]),
   )
   .icon(FaBook);
